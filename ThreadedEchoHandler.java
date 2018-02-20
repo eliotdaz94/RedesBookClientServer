@@ -1,21 +1,26 @@
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 public class ThreadedEchoHandler extends Thread {
 	private Socket ss;
 	private int counter;
 	public ThreadedEchoHandler(Socket i, int c) { ss = i; counter = c; }
 	public void run() {
+
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(ss.getInputStream()));
-			PrintWriter out = new PrintWriter(ss.getOutputStream(), true);
-			out.println("Hola! Escribe BYE para salir.");
+			InputStream io = ss.getInputStream();
+    		OutputStream os = ss.getOutputStream();
+			DataInputStream in = new DataInputStream(io);
+			DataOutputStream out = new DataOutputStream(os);
+			out.writeUTF("Hola! Escribe BYE para salir.");
 			boolean done = false;
 			while (!done) {
-				String str = in.readline();
+				String str = in.readUTF();
+				System.out.println("The message is " + str);
 				if (str == null) done = true;
 				else {
-					out.println("Echo " + counter + " : " + str);
+					out.writeUTF("Echo " + counter + " : " + str);
 					if (str.trim().equals("BYE")) done = true;
 				}
 			}
