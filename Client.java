@@ -12,8 +12,6 @@ class Client {
 			DataInputStream in = new DataInputStream(s.getInputStream());
 			DataOutputStream out = new DataOutputStream(s.getOutputStream());	
 			Scanner scanner = new Scanner(System.in);
-			final File file = new File("/home/anthony/Documents/LibrosRedesTest");
-			listFilesForFolder(file);
 			while(true) {
 				System.out.println("Opciones del Cliente:");
 				System.out.println("	1.- Estado de descargas.");
@@ -22,7 +20,7 @@ class Client {
 				System.out.println("	4.- Libros descargados por servidor.");
 				String output;
 				output = in.readUTF();
-				System.out.println("The output is " + output);
+				System.out.println(output);
 				String input = scanner.nextLine();
 				out.writeUTF(input);
 				out.flush();

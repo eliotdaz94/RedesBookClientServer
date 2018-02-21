@@ -7,13 +7,13 @@ public class Libro {
     public String nombre;
     public final File libro;
 
-    Libro(String nombre, String path){
-        nombre = nombre;
-        libro = new File(path);
+    Libro(String name, final File file){
+        nombre = name;
+        libro = file;
     }
 
     public String toString(){
-        return this.name;
+        return this.nombre;
     }
 
 }
