@@ -140,6 +140,7 @@ public class Cliente {
             Scanner sc = new Scanner(System.in);
             String output;
             String input;
+            String[] addresses = {"159.90.9.10","159.90.9.11","159.90.9.12"}; 
             while (true) {
                 System.out.println("Opciones del Cliente:");
                 System.out.println("	1.- Estado de descargas.");
@@ -158,12 +159,12 @@ public class Cliente {
                 }
                 else if(input.equals("2")){
                     Command c = Command.parseCommand("books", null);
-                    cliente.execute((RemoteCommand) c,"159.90.9.10",8989)
+                    cliente.execute((RemoteCommand) c,addresses[0],8989)
                     .thenAcceptAsync(System.out::println);
-		    cliente.execute((RemoteCommand) c,"159.90.9.11",8989)
-		    .thenAcceptAsync(System.out::println);
-		    cliente.execute((RemoteCommand) c,"159.90.9.12",8989)
-		    .thenAcceptAsync(System.out::println);
+		    		cliente.execute((RemoteCommand) c,addresses[1],8989)
+		    		.thenAcceptAsync(System.out::println);
+		    		cliente.execute((RemoteCommand) c,addresses[2],8989)
+		    		.thenAcceptAsync(System.out::println);
                 }
                 else if(input.equals("3")){
                     System.out.println("Ingrese el nombre del libro a descargar: ");
@@ -171,25 +172,27 @@ public class Cliente {
                     Command c = Command.parseCommand("request", bookName);
                     Command s = Command.parseCommand("size", bookName);
                     Command f = Command.parseCommand("finish", bookName);
-                    cliente.execute((RemoteCommand) s,"159.90.9.10",8989)
-                    .thenAcceptAsync(size -> cliente.librosSize.put(bookName, Integer.parseInt(size)))
-                    .thenComposeAsync(nothing -> {
-                        try {
-                            return cliente.execute((RemoteCommand) c,"159.90.9.10",8989);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return CompletableFuture.completedFuture("Fallo en la descarga.");
-                    })
-                    .thenAcceptAsync(System.out::println)
-                    .thenComposeAsync(none -> {
-                        try {
-                            return cliente.execute((RemoteCommand) f,"159.90.9.10",8989);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return CompletableFuture.completedFuture("Fallo en la descarga.");
-                    });
+                    for (int i = 0, i < 3, i++) {
+	                    cliente.execute((RemoteCommand) s,addresses[i],8989)
+	                    .thenAcceptAsync(size -> cliente.librosSize.put(bookName, Integer.parseInt(size)))
+	                    .thenComposeAsync(nothing -> {
+	                        try {
+	                            return cliente.execute((RemoteCommand) c,addresses[i],8989);
+	                        } catch (IOException e) {
+	                            e.printStackTrace();
+	                        }
+	                        return CompletableFuture.completedFuture("Fallo en la descarga.");
+	                    })
+	                    .thenAcceptAsync(System.out::println)
+	                    .thenComposeAsync(none -> {
+	                        try {
+	                            return cliente.execute((RemoteCommand) f,addresses[i],8989);
+	                        } catch (IOException e) {
+	                            e.printStackTrace();
+	                        }
+	                        return CompletableFuture.completedFuture("Fallo en la descarga.");
+	                    });
+	                }
                 }
                 else if(input.equals("4")){
                     cliente.librosServer.forEach((key, value) -> {
