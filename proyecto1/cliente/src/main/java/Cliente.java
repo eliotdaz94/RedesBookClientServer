@@ -472,9 +472,6 @@ public class Cliente {
                 else{
                     System.out.println("Escoja una opcion valida");
                 }
-                finds.put(addresses[0], false);
-                finds.put(addresses[1], false);
-                finds.put(addresses[2], false);
             }
         } catch (Exception e) {System.out.println(e);}
     }
