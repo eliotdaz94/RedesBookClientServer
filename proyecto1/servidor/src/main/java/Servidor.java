@@ -217,6 +217,7 @@ public class Servidor {
                         System.out.println("ACA");
                         byte[] c = new byte[chunkSize];
                         System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + chunkSize);
+                        System.out.println("KK");
                         channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
                         System.out.println("LL");
                         remainingBytes -= chunkSize;
