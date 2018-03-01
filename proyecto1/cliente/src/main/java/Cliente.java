@@ -134,6 +134,7 @@ public class Cliente {
                         return readUntilCompletion(channel, timeoutSeconds, fileName)
                                 .thenApplyAsync(next -> {
                                     ByteBuffer result = ByteBuffer.allocate(read + next.capacity());
+                                    System.out.println(next.capacity());
                                     buffer.position(0);
                                     result.put(buffer.array(), 0, read).put(next.array());
                                     if(fileName != null){
