@@ -213,6 +213,7 @@ public class Servidor {
                             channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
                             return;
                         }
+                        System.out.println("ACA");
                         byte[] c = new byte[chunkSize];
                         System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + chunkSize);
                         channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
