@@ -1,6 +1,4 @@
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import java.io.File;
 
 public class Libro {
 
@@ -15,5 +13,4 @@ public class Libro {
     public String toString(){
         return this.nombre;
     }
-
 }
