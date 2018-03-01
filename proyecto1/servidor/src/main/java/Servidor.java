@@ -201,11 +201,24 @@ public class Servidor {
                 {
                     byte[] bytesArray = executeCommand(read, channel);
                     ByteBuffer buffer = ByteBuffer.wrap(bytesArray);
-                    channel.write(buffer, 60000, TimeUnit.SECONDS, this, handler);
+                    int chunkSize = 4096;
+                    int remainingBytes = bytesArray.length;
+                    int cant = 0;
+                    while(remainingBytes > 0){
+                        if(remainingBytes < 4096){
+                            byte[] c = new byte[remainingBytes];
+                            System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + remainingBytes);
+                            channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
+                            return;
+                        }
+                        byte[] c = new byte[chunkSize];
+                        System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + chunkSize);
+                        channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
+                        cant++;
+                    }
                 }), workerPool)
                 .thenApply(nothing ->
                 {
-                    System.out.println("Escribio " + nothing + " bytes");
                     try {
                         channel.close();
                     } catch (Exception e){}
