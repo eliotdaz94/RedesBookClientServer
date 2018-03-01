@@ -255,6 +255,12 @@ public class Servidor {
                     val.forEach(System.out::println);
                 });
             }
+            else if(option.equals("5")){
+                System.exit(0);
+            }
+            else{
+                System.out.println("Escoja una opcion valida");
+            }
         }
     }
 }
