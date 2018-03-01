@@ -38,7 +38,7 @@ public class Cliente {
         AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
 
         return CompletableIO.<Void, Cliente>execute(handler ->
-                channel.connect(new InetSocketAddress(159.90.9.10, 8989), this, handler))
+                channel.connect(new InetSocketAddress("159.90.9.10", 8989), this, handler))
                 .thenComposeAsync(nothing -> CompletableIO.<Integer, Cliente>execute(handler -> channel.write(ByteBuffer.wrap(serialized), 600, TimeUnit.SECONDS, this, handler)), workerPool)
                 .thenComposeAsync(written -> {
                     String bookName = null;
