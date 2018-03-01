@@ -205,6 +205,8 @@ public class Servidor {
                     int remainingBytes = bytesArray.length;
                     int cant = 0;
                     while(remainingBytes > 0){
+                        System.out.println(remainingBytes);
+                        System.out.println(cant);
                         if(remainingBytes < 4096){
                             byte[] c = new byte[remainingBytes];
                             System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + remainingBytes);
