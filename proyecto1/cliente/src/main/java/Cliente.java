@@ -134,7 +134,7 @@ public class Cliente {
             Scanner sc = new Scanner(System.in);
             String output;
             String input;
-            String[] addresses = {"159.90.9.10","159.90.9.11","159.90.9.12"}; 
+            String[] addresses = {"159.90.9.10","159.90.9.11","159.90.9.12"};
             while (true) {
                 System.out.println("Opciones del Cliente:");
                 System.out.println("	1.- Estado de descargas.");
@@ -166,7 +166,7 @@ public class Cliente {
                     Command c = Command.parseCommand("request", bookName);
                     Command s = Command.parseCommand("size", bookName);
                     Command f = Command.parseCommand("finish", bookName);
-                    for (int i = 0, i < 3, i++) {
+                    for (int i = 0; i < 3; i++) {
 	                    cliente.execute((RemoteCommand) s,addresses[i],8989)
 	                    .thenAcceptAsync(size -> cliente.librosSize.put(bookName, Integer.parseInt(size)))
 	                    .thenComposeAsync(nothing -> {
