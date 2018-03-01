@@ -210,6 +210,7 @@ public class Cliente {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+                                System.out.println("El size es " + size);
                                 if (!size.equals("0")) {
                                     finds.put(addresses[index], true);
                                 }
@@ -288,6 +289,7 @@ public class Cliente {
                         }
                         cliente.execute((RemoteCommand) s, addresses[index], 8989)
                         .thenAcceptAsync(size -> {
+                            System.out.println("El size es " + size);
                             cliente.librosSize.put(bookName, Integer.parseInt(size));
                             try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
                                 gson.toJson(cliente.librosSize, writer);
