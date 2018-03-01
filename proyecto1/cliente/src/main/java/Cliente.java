@@ -281,10 +281,10 @@ public class Cliente {
                     finds.put(addresses[2], false);
                     for(int i = 0; i < 3; i++) {
                         final int index = i;
-                        if(index == 1 && finds.get(addresses[0])){
+                        if(i == 1 && finds.get(addresses[0])){
                             break;
                         }
-                        if(index == 2 && finds.get(addresses[1])){
+                        if(i == 2 && finds.get(addresses[1])){
                             break;
                         }
                         cliente.execute((RemoteCommand) s, addresses[index], 8989)
@@ -297,6 +297,7 @@ public class Cliente {
                                 e.printStackTrace();
                             }
                             if (!size.equals("0")) {
+                                System.out.println("El index true es " + index);
                                 finds.put(addresses[index], true);
                             }
                         })
