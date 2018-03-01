@@ -124,7 +124,7 @@ public class Cliente {
      */
     private CompletableFuture<ByteBuffer> readUntilCompletion(AsynchronousSocketChannel channel, int timeoutSeconds, String fileName) {
 
-        int bufferSize = 32;
+        int bufferSize = 128;
         final ByteBuffer buffer = ByteBuffer.allocate(bufferSize);
         return CompletableIO.<Integer, Cliente>execute(h -> channel.read(buffer, timeoutSeconds, TimeUnit.SECONDS, this, h))
                 .thenComposeAsync(read -> {
