@@ -372,6 +372,9 @@ public class Cliente {
                     })
                     .thenAcceptAsync(none -> {
                         try {
+                            System.out.println("En el primero luego");
+                            System.out.println(finds.get(addresses[0]));
+                            System.out.println(finds.get(addresses[1]));
                             if(finds.get(addresses[0])){
                                 return;
                             }
@@ -412,6 +415,9 @@ public class Cliente {
                     })
                     .thenAcceptAsync(none -> {
                         try {
+                            System.out.println("En el segundo luego");
+                            System.out.println(finds.get(addresses[0]));
+                            System.out.println(finds.get(addresses[1]));
                             if(finds.get(addresses[1]) || finds.get(addresses[0])){
                                 return;
                             }
