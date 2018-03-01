@@ -63,32 +63,26 @@ public class Cliente {
                             e.printStackTrace();
                         }
                         try{
-			    System.out.println("Abriendo Gson");
-                            Gson gson = new Gson();
+			    Gson gson = new Gson();
                             ArrayList<String> entry;
                             String key = channel.getRemoteAddress().toString();
-			    System.out.println("Antes del if");
 			    if(librosServer == null) {
 				librosServer = new HashMap<>();
 			    }
                             if(librosServer.containsKey(key)) {
-				System.out.println("Existe la entrada");
-                                entry = librosServer.get(key);
+				entry = librosServer.get(key);
                             }
                             else{
-				System.out.println("No existe la entrada");
-                                entry = new ArrayList<>();
+				entry = new ArrayList<>();
                             }
-			    System.out.println("Ya encontre la key");
-                            entry.add(nombreLibro);
+			    entry.add(nombreLibro);
                             librosServer.put(key, entry);
                             librosDownload.remove(nombreLibro);
                             try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosServer.json")) {
                                 gson.toJson(librosServer, writer);
                             }
                         }catch (Exception e){
-			    System.out.println("Catch del Gson");
-                            System.out.println(e);
+			    System.out.println(e);
 			    e.printStackTrace();
                         }
                         return "Descarga finalizada.";
