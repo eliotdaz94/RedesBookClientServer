@@ -201,28 +201,7 @@ public class Servidor {
                 {
                     byte[] bytesArray = executeCommand(read, channel);
                     ByteBuffer buffer = ByteBuffer.wrap(bytesArray);
-                    int chunkSize = 4096;
-                    int remainingBytes = bytesArray.length;
-                    int cant = 0;
-                    while(remainingBytes > 0){
-                        System.out.println(remainingBytes);
-                        System.out.println(cant);
-                        if(remainingBytes < 4096){
-                            System.out.println("ACA2");
-                            byte[] c = new byte[remainingBytes];
-                            System.arraycopy(bytesArray, cant*chunkSize, c, 0, chunkSize);
-                            channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
-                            return;
-                        }
-                        System.out.println("ACA");
-                        byte[] c = new byte[chunkSize];
-                        System.arraycopy(bytesArray, cant*chunkSize, c, 0, chunkSize);
-                        System.out.println("KK");
-                        channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
-                        System.out.println("LL");
-                        remainingBytes -= chunkSize;
-                        cant++;
-                    }
+                    channel.write(buffer, 60, TimeUnit.SECONDS, this, handler);
                 }), workerPool)
                 .thenApply(nothing ->
                 {
