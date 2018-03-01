@@ -259,7 +259,7 @@ public class Cliente {
                         })
                         .thenAcceptAsync(none -> {
                             try {
-                                if(finds.get(addresses[1])){
+                                if(finds.get(addresses[1]) || finds.get(addresses[0])){
                                     return;
                                 }
                                 cliente.execute((RemoteCommand) s, addresses[2], 8989)
@@ -414,7 +414,7 @@ public class Cliente {
                     })
                     .thenAcceptAsync(none -> {
                         try {
-                            if(finds.get(addresses[1])){
+                            if(finds.get(addresses[1]) || finds.get(addresses[0]))){
                                 return;
                             }
                             cliente.execute((RemoteCommand) s, addresses[2], 8989)
