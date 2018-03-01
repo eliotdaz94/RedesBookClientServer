@@ -1,5 +1,8 @@
 import java.io.File;
 
+/**
+ * Clase libro utilizada para representar los PDF, posee el nombre y el archivo asociado al mismo.
+ */
 public class Libro {
 
     public String nombre;

@@ -32,6 +32,19 @@ public class Cliente {
         this.port = port;
     }
 
+    /**
+     * La funcion execute, es la que se encarga del manejo y procesamiento de todas las solicitudes del cliente que
+     * involucren a algun servidor. Se encarga de abrir un canal no persistente hacia la direccion y puerto del
+     * servidor mediante el cual establece la comunicacion por este mismo canal se realiza la lectura de la respuesta
+     * al momento de su cierre del lado del servidor, luego de leer dependiento del comando enviado por el cliente
+     * se realiza la logica pertinente.
+     * @param command Comando a ejecutar por el cliente para solicitar libros, descargas o reanudaciones.
+     * @param addr Direccion a la cual se conectara el canal.
+     * @param port Puerto al cual se conectara el canal.
+     * @return Esta funcion retorna un futuro de string el cual es un evento que se encargara de disparar el valor
+     * obtenido de parte del servidor cuando el proceso asincrono deje de funcionar.
+     * @throws IOException
+     */
     public CompletableFuture<String> execute(RemoteCommand command, String addr, int port) throws IOException {
         byte[] serialized = RemoteCommand.serialize(command);
         AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
@@ -117,8 +130,10 @@ public class Cliente {
     }
 
     /**
-     * Reads the given channel until the end.
-     * @param channel The channel to read.
+     * Lee de el canal dado hasta el final del mismo de forma recursiva.
+     * @param channel El canal para leer.
+     * @param timeoutSeconds El tiempo de espera por la lectura.
+     * @param fileName Nombre del archivo que se esta leyendo para mantener control sobre los datos en json.
      * @return
      */
     private CompletableFuture<ByteBuffer> readUntilCompletion(AsynchronousSocketChannel channel, int timeoutSeconds, String fileName) {
@@ -155,6 +170,12 @@ public class Cliente {
                 }, workerPool);
     }
 
+    /**
+     * Archivo de corrida pricipal del cliente, se encarga de instanciar los datos y proveer un menu para realizar las
+     * solicitudes. Mediante el encadenamiento de funciones asincronas se pueden realizar las solicitudes para luego
+     * trabajar con los mensajes que estas proveen.
+     * @param args
+     */
     public static void main(String[] args){
         try{
             HashMap<String, Boolean> finds = new HashMap<>();

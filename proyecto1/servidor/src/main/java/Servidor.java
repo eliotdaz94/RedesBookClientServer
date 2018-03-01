@@ -32,6 +32,11 @@ public class Servidor {
     private HashMap<String, HashMap<String, Integer>> booksClient = new HashMap<>();
     private HashMap<String, ArrayList<String>> currentDownloads = new HashMap<>();
 
+    /**
+     * Funcion que a partir de una carpeta llena una lista con todos los libros en ella.
+     * @param folder ruta de la carpeta.
+     * @return Una lista con los libros que se pudieron procesar.
+     */
     private static ArrayList<Libro> llenarLibros(final File folder) {
         ArrayList<Libro> result = new ArrayList<>();
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
@@ -46,6 +51,15 @@ public class Servidor {
         libros = llenarLibros(file);
     }
 
+    /**
+     * Funcion principal que maneja la logica de ejecucion de los comandos que envia un cliente al servidor, esta
+     * toma un comando y el canal de comunicacion y dependiendo de la instruccion enviada arma un arreglo de bytes con
+     * el mensaje o los archivos a responder. Tambien se encarga de llenar y acomodar la informacion que puede manejar
+     * el servidor dentro como la lista de clientes que consultaron llenando las estructuras de datos pertinentes.
+     * @param command
+     * @param clientChannel
+     * @return un arreglo de bytes con la informacion a ser enviada por el servidor.
+     */
     byte [] executeCommand(String command, AsynchronousSocketChannel clientChannel){
         String serverAdd = "";
         try{
@@ -190,11 +204,23 @@ public class Servidor {
         return new byte[0];
     }
 
+    /**
+     * Funcion que lee un comando desde el canal del cliente.
+     * @param channel canal desde el cual se lee.
+     * @return retorna un futuro con el string que surgira de leer la informacion del canal.
+     */
     private CompletableFuture<String> read(AsynchronousSocketChannel channel) {
         return readUntilCompletion(channel, 10)
                 .thenApplyAsync(result -> new String(result.array(), StandardCharsets.UTF_8));
     }
 
+    /**
+     * Funcion que se encarga de ejecutar un comando especificado por el cliente en un canal a momento de dispararse
+     * un evento, esta lee el comando y luego lo ejecuta para enviar esa informacion mediante un arreglo de bytes
+     * al otro lado.
+     * @param channel Canal de transmision con el cliente.
+     * @return
+     */
     public CompletableFuture<Integer> execute(AsynchronousSocketChannel channel){
         return read(channel)
                 .thenComposeAsync(read -> CompletableIO.<Integer, Servidor>execute(handler ->
@@ -211,6 +237,12 @@ public class Servidor {
                 });
     }
 
+    /**
+     * Funcion que lee el mensaje enviado por el cliente en una sola pasada del buffer.
+     * @param channel Canal de comunicacion.
+     * @param timeoutSeconds Tiempo que durara la lectura.
+     * @return Regresa un futuro con el bytebuffer asociado al mensaje leido.
+     */
     private CompletableFuture<ByteBuffer> readUntilCompletion(AsynchronousSocketChannel channel, int timeoutSeconds) {
         int bufferSize = 1024;
         final ByteBuffer buffer = ByteBuffer.allocate(bufferSize);
@@ -225,6 +257,13 @@ public class Servidor {
     }
 
 
+    /**
+     * Main del servidor encargado de leer todas las estructuras usadas de los archivos json y proveer un menu
+     * para la comunicacion e impresion de informacion del mismo. Al momento de conectar realiza un accept que se
+     * dispara al escuchar una conexion entrante del cliente y esto se maneja con un worker pool facilitando la
+     * concurrencia.
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String option;
