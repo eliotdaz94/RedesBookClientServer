@@ -69,12 +69,12 @@ public class Cliente {
                             if(librosServer == null) {
                             librosServer = new HashMap<>();
                             }
-                                        if(librosServer.containsKey(key)) {
-                            entry = librosServer.get(key);
-                                        }
-                                        else{
-                            entry = new ArrayList<>();
-                                        }
+                            if(librosServer.containsKey(key)) {
+                                entry = librosServer.get(key);
+                            }
+                            else{
+                                entry = new ArrayList<>();
+                            }
                             entry.add(nombreLibro);
                             librosServer.put(key, entry);
                             librosDownload.remove(nombreLibro);
@@ -183,7 +183,7 @@ public class Cliente {
                         .thenAcceptAsync(size -> {
                             cliente.librosSize.put(bookName, Integer.parseInt(size));
                             if (!size.equals("0")) {
-                                finds.put(addresses[0], true);
+                                finds.put(addresses[index], true);
                             }
                         })
                         .thenComposeAsync(nothing -> {
