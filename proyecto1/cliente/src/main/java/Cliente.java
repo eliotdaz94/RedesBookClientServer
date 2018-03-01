@@ -190,57 +190,120 @@ public class Cliente {
                         Command c = Command.parseCommand("restart", key, val.toString());
                         Command s = Command.parseCommand("size", key, null);
                         Command f = Command.parseCommand("finish", key, null);
-                        Boolean find = false;
-                        finds.put(addresses[0], false);
-                        finds.put(addresses[1], false);
-                        finds.put(addresses[2], false);
-                        for(int i = 0; i < 3; i++) {
-                            final int index = i;
-                            if(index == 1 && finds.get(addresses[0])){
-                                break;
+                        cliente.execute((RemoteCommand) s, addresses[0], 8989)
+                        .thenAcceptAsync(size -> {
+                            System.out.println("El size es " + size);
+                            cliente.librosSize.put(key, Integer.parseInt(size));
+                            try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
+                                gson.toJson(cliente.librosSize, writer);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            if(index == 2 && finds.get(addresses[1])){
-                                break;
+                            if (!size.equals("0")) {
+                                finds.put(addresses[0], true);
                             }
-                            cliente.execute((RemoteCommand) s, addresses[index], 8989)
-                            .thenAcceptAsync(size -> {
-                                cliente.librosSize.put(key, Integer.parseInt(size));
-                                try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
-                                    gson.toJson(cliente.librosSize, writer);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                        })
+                        .thenComposeAsync(nothing -> {
+                            try {
+                                return cliente.execute((RemoteCommand) c, addresses[0], 8989);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return CompletableFuture.completedFuture("Fallo en la descarga.");
+                        })
+                        .thenComposeAsync(none -> {
+                            try {
+                                if (finds.get(addresses[0]))
+                                    return cliente.execute((RemoteCommand) f, addresses[0], 8989);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return CompletableFuture.completedFuture("Fallo en la descarga.");
+                        })
+                        .thenAcceptAsync(none -> {
+                            try {
+                                if(finds.get(addresses[0])){
+                                    return;
                                 }
-                                System.out.println("El size es " + size);
-                                if (!size.equals("0")) {
-                                    finds.put(addresses[index], true);
+                                cliente.execute((RemoteCommand) s, addresses[1], 8989)
+                                .thenAcceptAsync(size -> {
+                                    System.out.println("El size es " + size);
+                                    cliente.librosSize.put(key, Integer.parseInt(size));
+                                    try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
+                                        gson.toJson(cliente.librosSize, writer);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (!size.equals("0")) {
+                                        finds.put(addresses[1], true);
+                                    }
+                                })
+                                .thenComposeAsync(nothing -> {
+                                    try {
+                                        return cliente.execute((RemoteCommand) c, addresses[1], 8989);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return CompletableFuture.completedFuture("Fallo en la descarga.");
+                                })
+                                .thenComposeAsync(no -> {
+                                    try {
+                                        if (finds.get(addresses[1]))
+                                            return cliente.execute((RemoteCommand) f, addresses[1], 8989);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return CompletableFuture.completedFuture("Fallo en la descarga.");
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        })
+                        .thenAcceptAsync(none -> {
+                            try {
+                                if(finds.get(addresses[1])){
+                                    return;
                                 }
-                            })
-                            .thenComposeAsync(nothing -> {
-                                try {
-                                    System.out.println("Se completo la descarga.");
-                                    return cliente.execute((RemoteCommand) c, addresses[index], 8989);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                return CompletableFuture.completedFuture("Fallo en la descarga.");
-                            })
-                            .thenComposeAsync(none -> {
-                                try {
-                                    if (finds.get(addresses[index]))
-                                        return cliente.execute((RemoteCommand) f, addresses[index], 8989);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                return CompletableFuture.completedFuture("Fallo en la descarga.");
-                            });
-                        }
+                                cliente.execute((RemoteCommand) s, addresses[2], 8989)
+                                .thenAcceptAsync(size -> {
+                                    System.out.println("El size es " + size);
+                                    cliente.librosSize.put(key, Integer.parseInt(size));
+                                    try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
+                                        gson.toJson(cliente.librosSize, writer);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (!size.equals("0")) {
+                                        finds.put(addresses[2], true);
+                                    }
+                                })
+                                .thenComposeAsync(nothing -> {
+                                    try {
+                                        return cliente.execute((RemoteCommand) c, addresses[2], 8989);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return CompletableFuture.completedFuture("Fallo en la descarga.");
+                                })
+                                .thenComposeAsync(no -> {
+                                    try {
+                                        if (finds.get(addresses[2]))
+                                            return cliente.execute((RemoteCommand) f, addresses[2], 8989);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    return CompletableFuture.completedFuture("Fallo en la descarga.");
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
                 }catch (Exception e){
                     System.out.println(e);
                 }
                 });
             }
-
-
+            
             Scanner sc = new Scanner(System.in);
             String output;
             String input;
@@ -279,47 +342,121 @@ public class Cliente {
                     finds.put(addresses[0], false);
                     finds.put(addresses[1], false);
                     finds.put(addresses[2], false);
-                    for(int i = 0; i < 3; i++) {
-                        final int index = i;
-                        if(i == 1 && finds.get(addresses[0])){
-                            break;
-                        }
-                        if(i == 2 && finds.get(addresses[1])){
-                            break;
-                        }
-                        cliente.execute((RemoteCommand) s, addresses[index], 8989)
-                        .thenAcceptAsync(size -> {
-                            System.out.println("El size es " + size);
-                            cliente.librosSize.put(bookName, Integer.parseInt(size));
-                            try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
-                                gson.toJson(cliente.librosSize, writer);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            if (!size.equals("0")) {
-                                System.out.println("El index true es " + index);
-                                finds.put(addresses[index], true);
-                            }
-                        })
-                        .thenComposeAsync(nothing -> {
-                            try {
-                                return cliente.execute((RemoteCommand) c, addresses[index], 8989);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            return CompletableFuture.completedFuture("Fallo en la descarga.");
-                        })
-                        .thenAcceptAsync(System.out::println)
-                        .thenComposeAsync(none -> {
-                            try {
-                                if (finds.get(addresses[index]))
-                                    return cliente.execute((RemoteCommand) f, addresses[index], 8989);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            return CompletableFuture.completedFuture("Fallo en la descarga.");
-                        });
+                    if(finds.get(addresses[1])){
+                        break;
                     }
+                    cliente.execute((RemoteCommand) s, addresses[0], 8989)
+                    .thenAcceptAsync(size -> {
+                        System.out.println("El size es " + size);
+                        cliente.librosSize.put(bookName, Integer.parseInt(size));
+                        try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
+                            gson.toJson(cliente.librosSize, writer);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (!size.equals("0")) {
+                            finds.put(addresses[0], true);
+                        }
+                    })
+                    .thenComposeAsync(nothing -> {
+                        try {
+                            return cliente.execute((RemoteCommand) c, addresses[0], 8989);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return CompletableFuture.completedFuture("Fallo en la descarga.");
+                    })
+                    .thenAcceptAsync(System.out::println)
+                    .thenComposeAsync(none -> {
+                        try {
+                            if (finds.get(addresses[0]))
+                                return cliente.execute((RemoteCommand) f, addresses[0], 8989);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return CompletableFuture.completedFuture("Fallo en la descarga.");
+                    })
+                    .thenAcceptAsync(none -> {
+                        try {
+                            if(finds.get(addresses[0])){
+                                return;
+                            }
+                            cliente.execute((RemoteCommand) s, addresses[1], 8989)
+                            .thenAcceptAsync(size -> {
+                                cliente.librosSize.put(bookName, Integer.parseInt(size));
+                                try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
+                                    gson.toJson(cliente.librosSize, writer);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (!size.equals("0")) {
+                                    System.out.println("El index true es " + 1);
+                                    finds.put(addresses[1], true);
+                                }
+                            })
+                            .thenComposeAsync(nothing -> {
+                                try {
+                                    return cliente.execute((RemoteCommand) c, addresses[1], 8989);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return CompletableFuture.completedFuture("Fallo en la descarga.");
+                            })
+                            .thenAcceptAsync(System.out::println)
+                            .thenComposeAsync(no -> {
+                                try {
+                                    if (finds.get(addresses[1]))
+                                        return cliente.execute((RemoteCommand) f, addresses[1], 8989);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return CompletableFuture.completedFuture("Fallo en la descarga.");
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    })
+                    .thenAcceptAsync(none -> {
+                        try {
+                            if(finds.get(addresses[1])){
+                                return;
+                            }
+                            cliente.execute((RemoteCommand) s, addresses[2], 8989)
+                            .thenAcceptAsync(size -> {
+                                cliente.librosSize.put(bookName, Integer.parseInt(size));
+                                try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosSize.json")) {
+                                    gson.toJson(cliente.librosSize, writer);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (!size.equals("0")) {
+                                    System.out.println("El index true es " + 1);
+                                    finds.put(addresses[2], true);
+                                }
+                            })
+                            .thenComposeAsync(nothing -> {
+                                try {
+                                    return cliente.execute((RemoteCommand) c, addresses[2], 8989);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return CompletableFuture.completedFuture("Fallo en la descarga.");
+                            })
+                            .thenAcceptAsync(System.out::println)
+                            .thenComposeAsync(no -> {
+                                try {
+                                    if (finds.get(addresses[2]))
+                                        return cliente.execute((RemoteCommand) f, addresses[2], 8989);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return CompletableFuture.completedFuture("Fallo en la descarga.");
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+
                 }
                 else if(input.equals("4")){
                     cliente.librosServer.forEach((key, value) -> {
