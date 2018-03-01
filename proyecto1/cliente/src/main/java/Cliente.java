@@ -136,12 +136,6 @@ public class Cliente {
                                     result.put(buffer.array(), 0, read).put(next.array());
                                     if(fileName != null){
                                         librosDownload.put(fileName, (read + next.capacity()));
-                                        try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosDownload.json")) {
-                                            Gson gson = new Gson();
-                                            gson.toJson(librosDownload, writer);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
                                     }
                                     return result;
                                 }, workerPool);
