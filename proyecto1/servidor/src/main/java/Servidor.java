@@ -200,8 +200,7 @@ public class Servidor {
                 .thenComposeAsync(read -> CompletableIO.<Integer, Servidor>execute(handler ->
                 {
                     byte[] bytesArray = executeCommand(read, channel);
-                    ByteBuffer buffer = ByteBuffer.wrap(bytesArray);
-                    channel.write(buffer, 60, TimeUnit.SECONDS, this, handler);
+                    channel.write(ByteBuffer.wrap(bytesArray), 60, TimeUnit.SECONDS, this, handler);
                 }), workerPool)
                 .thenApply(nothing ->
                 {
