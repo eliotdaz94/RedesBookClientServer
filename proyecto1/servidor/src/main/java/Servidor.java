@@ -42,7 +42,7 @@ public class Servidor {
     }
 
     public Servidor() {
-        final File file = new File("./Libros");
+        final File file = new File("/home/invitado/Documents/RedesBookClientServer/proyecto1/servidor/src/main/java/Libros");
         libros = llenarLibros(file);
     }
 
@@ -112,7 +112,7 @@ public class Servidor {
                     if(currentDownloads.containsKey(key)){
                         currentDownloads.get(key).remove(elegido.nombre);
                     }
-                    try (Writer writer = new FileWriter("./librosDescargados.json")) {
+                    try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/servidor/src/main/java/librosDescargados.json")) {
                         gson.toJson(booksClient, writer);
                     }
                     return new byte[0];
@@ -199,7 +199,7 @@ public class Servidor {
             final Type REVIEW_TYPE = new TypeToken<HashMap<String, HashMap<String, Integer>>>() {
             }.getType();
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("./librosDescargados.json"));
+            JsonReader reader = new JsonReader(new FileReader("/home/invitado/Documents/RedesBookClientServer/proyecto1/servidor/src/main/java/librosDescargados.json"));
             servidor.booksClient = gson.fromJson(reader, REVIEW_TYPE);
             if(servidor.booksClient == null){
                 servidor.booksClient = new HashMap<>();
