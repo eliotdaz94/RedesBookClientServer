@@ -240,7 +240,6 @@ public class Servidor {
                         System.out.println("El usuario " + key + " ha consultado " + val + " veces"));
             }
             if(option.equals("3")){
-                System.out.println("cosa");
                 servidor.booksClient.forEach((key, val) -> {
                   System.out.println("El cliente " + key + " ha descargado los siguientes libros: ");
                   val.forEach((name, cant) ->
