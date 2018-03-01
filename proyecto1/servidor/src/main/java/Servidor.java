@@ -201,10 +201,11 @@ public class Servidor {
                 {
                     byte[] bytesArray = executeCommand(read, channel);
                     ByteBuffer buffer = ByteBuffer.wrap(bytesArray);
-                    channel.write(buffer, 600, TimeUnit.SECONDS, this, handler);
+                    channel.write(buffer, 60000, TimeUnit.SECONDS, this, handler);
                 }), workerPool)
                 .thenApply(nothing ->
                 {
+                    System.out.println("Escribio " + nothing + " bytes");
                     try {
                         channel.close();
                     } catch (Exception e){}
