@@ -183,6 +183,9 @@ public class Cliente {
             if(!cliente.librosDownload.isEmpty()){
                 cliente.librosDownload.forEach((key, val) ->
                 {
+                    finds.put(addresses[0], false);
+                    finds.put(addresses[1], false);
+                    finds.put(addresses[2], false);
                     try{
                         Command c = Command.parseCommand("restart", key, val.toString());
                         Command s = Command.parseCommand("size", key, null);
@@ -230,9 +233,6 @@ public class Cliente {
                                 return CompletableFuture.completedFuture("Fallo en la descarga.");
                             });
                         }
-                        finds.put(addresses[0], false);
-                        finds.put(addresses[1], false);
-                        finds.put(addresses[2], false);
                 }catch (Exception e){
                     System.out.println(e);
                 }
@@ -317,20 +317,12 @@ public class Cliente {
                             return CompletableFuture.completedFuture("Fallo en la descarga.");
                         });
                     }
-                    finds.put(addresses[0], false);
-                    finds.put(addresses[1], false);
-                    finds.put(addresses[2], false);
                 }
                 else if(input.equals("4")){
                     cliente.librosServer.forEach((key, value) -> {
                         System.out.println("Del servidor " + key + " se descargaron los siguientes libros: ");
                         value.forEach(val -> System.out.println("    " + val));
                         System.out.println(" ");
-                    });
-
-
-                    cliente.librosSize.forEach((key, value) -> {
-                        System.out.println("El libro" + key + " tiene tam " + value);
                     });
                 }
                 else if(input.equals("5")){
@@ -339,6 +331,9 @@ public class Cliente {
                 else{
                     System.out.println("Escoja una opcion valida");
                 }
+                finds.put(addresses[0], false);
+                finds.put(addresses[1], false);
+                finds.put(addresses[2], false);
             }
         } catch (Exception e) {System.out.println(e);}
     }
