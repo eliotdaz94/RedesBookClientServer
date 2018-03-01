@@ -339,9 +339,6 @@ public class Cliente {
                     finds.put(addresses[0], false);
                     finds.put(addresses[1], false);
                     finds.put(addresses[2], false);
-                    if(finds.get(addresses[1])){
-                        break;
-                    }
                     cliente.execute((RemoteCommand) s, addresses[0], 8989)
                     .thenAcceptAsync(size -> {
                         cliente.librosSize.put(bookName, Integer.parseInt(size));
@@ -351,6 +348,7 @@ public class Cliente {
                             e.printStackTrace();
                         }
                         if (!size.equals("0")) {
+                            System.out.println("0");
                             finds.put(addresses[0], true);
                         }
                     })
@@ -386,7 +384,7 @@ public class Cliente {
                                     e.printStackTrace();
                                 }
                                 if (!size.equals("0")) {
-                                    System.out.println("El index true es " + 1);
+                                    System.out.println("1");
                                     finds.put(addresses[1], true);
                                 }
                             })
@@ -426,7 +424,7 @@ public class Cliente {
                                     e.printStackTrace();
                                 }
                                 if (!size.equals("0")) {
-                                    System.out.println("El index true es " + 1);
+                                    System.out.println("El index true es " + 2);
                                     finds.put(addresses[2], true);
                                 }
                             })
