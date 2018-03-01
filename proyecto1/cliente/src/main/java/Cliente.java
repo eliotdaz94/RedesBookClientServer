@@ -216,13 +216,13 @@ public class Cliente {
                             })
                             .thenComposeAsync(nothing -> {
                                 try {
+                                    System.out.println("Se completo la descarga.");
                                     return cliente.execute((RemoteCommand) c, addresses[index], 8989);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                                 return CompletableFuture.completedFuture("Fallo en la descarga.");
                             })
-                            .thenAcceptAsync(System.out::println)
                             .thenComposeAsync(none -> {
                                 try {
                                     if (finds.get(addresses[index]))
