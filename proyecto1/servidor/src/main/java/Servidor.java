@@ -210,13 +210,13 @@ public class Servidor {
                         if(remainingBytes < 4096){
                             System.out.println("ACA2");
                             byte[] c = new byte[remainingBytes];
-                            System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + remainingBytes);
+                            System.arraycopy(bytesArray, cant*chunkSize, c, 0, chunkSize);
                             channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
                             return;
                         }
                         System.out.println("ACA");
                         byte[] c = new byte[chunkSize];
-                        System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + chunkSize);
+                        System.arraycopy(bytesArray, cant*chunkSize, c, 0, chunkSize);
                         System.out.println("KK");
                         channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
                         System.out.println("LL");
