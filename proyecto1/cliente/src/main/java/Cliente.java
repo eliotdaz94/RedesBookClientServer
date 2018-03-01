@@ -122,7 +122,7 @@ public class Cliente {
      */
     private CompletableFuture<ByteBuffer> readUntilCompletion(AsynchronousSocketChannel channel, int timeoutSeconds, String fileName) {
 
-        int bufferSize = 225000;
+        int bufferSize = 32;
         final ByteBuffer buffer = ByteBuffer.allocate(bufferSize);
         return CompletableIO.<Integer, Cliente>execute(h -> channel.read(buffer, timeoutSeconds, TimeUnit.SECONDS, this, h))
                 .thenComposeAsync(read -> {
@@ -136,6 +136,12 @@ public class Cliente {
                                     result.put(buffer.array(), 0, read).put(next.array());
                                     if(fileName != null){
                                         librosDownload.put(fileName, (read + next.capacity()));
+                                        try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosDownload.json")) {
+                                            Gson gson = new Gson();
+                                            gson.toJson(librosDownload, writer);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                     return result;
                                 }, workerPool);
