@@ -49,6 +49,7 @@ public class Cliente {
                 }, workerPool)
                 .thenApplyAsync((ByteBuffer result) -> {
                     String regreso = new String(result.array(), StandardCharsets.UTF_8);
+                    System.out.println("El retorno fue de " + regreso.length());
                     if(command instanceof Commands.Request) {
                         if(regreso.equals("0")){
                             return "Libro no conseguido.";
@@ -56,6 +57,7 @@ public class Cliente {
                         System.out.println("Libro conseguido, iniciando descarga.");
                         String nombreLibro = ((Commands.Request) command).name;
                         try {
+                            System.out.println("Escribiendo el libro " + result.array().length);
                             FileOutputStream fos = new FileOutputStream("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/LibrosDescargados/" + nombreLibro + "_download.pdf");
                             fos.write(result.array());
                             fos.close();
