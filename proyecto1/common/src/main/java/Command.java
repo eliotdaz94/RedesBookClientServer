@@ -1,4 +1,6 @@
-
+/**
+ * Clase abstracta comando la cual se encarga de parsear una linea de comandos y generar elcomando asociado a la misma.
+ */
 public abstract class Command {
 
     public static Command parseCommand(String commandLine, String nombre, String from) {

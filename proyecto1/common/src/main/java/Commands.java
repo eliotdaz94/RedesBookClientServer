@@ -1,5 +1,9 @@
 import java.rmi.Remote;
 
+/**
+ * Clase Comandos, en esta se definen las clases "anonimas" que usara el cliente para saber que informacion enviar, de
+ * esta manera se reduce la memoria utilizada y mejora el desempeño.
+ */
 final public class Commands {
 
     public static class Echo extends RemoteCommand {

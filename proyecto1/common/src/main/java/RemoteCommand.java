@@ -1,6 +1,11 @@
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Clase abstracta Remotecommand con la cual se generan los mensajes en arreglos de bytes que seran enviados por el
+ * cliente al momento de ejecutar una transmision al servidor, de esta forma se logra encapsular la serializacion y
+ * envio de mensajes. 
+ */
 public abstract class RemoteCommand extends Command {
 
     private static final Charset charset = StandardCharsets.UTF_8;
