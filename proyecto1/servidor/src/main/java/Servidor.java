@@ -214,6 +214,7 @@ public class Servidor {
                         byte[] c = new byte[chunkSize];
                         System.arraycopy(bytesArray, 0, c, cant*chunkSize, cant*chunkSize + chunkSize);
                         channel.write(ByteBuffer.wrap(c), 60, TimeUnit.SECONDS, this, handler);
+                        remainingBytes -= chunkSize;
                         cant++;
                     }
                 }), workerPool)
