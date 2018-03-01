@@ -38,7 +38,7 @@ public class Cliente {
         AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
 
         return CompletableIO.<Void, Cliente>execute(handler ->
-                channel.connect(new InetSocketAddress("localhost", 8989), this, handler))
+                channel.connect(new InetSocketAddress(159.90.9.10, 8989), this, handler))
                 .thenComposeAsync(nothing -> CompletableIO.<Integer, Cliente>execute(handler -> channel.write(ByteBuffer.wrap(serialized), 600, TimeUnit.SECONDS, this, handler)), workerPool)
                 .thenComposeAsync(written -> {
                     String bookName = null;
@@ -57,7 +57,7 @@ public class Cliente {
                         System.out.println("Libro conseguido, iniciando descarga.");
                         String nombreLibro = ((Commands.Request) command).name;
                         try {
-                            FileOutputStream fos = new FileOutputStream("/home/anthony/libros/" + nombreLibro + "_download.pdf");
+                            FileOutputStream fos = new FileOutputStream("./LibrosDescargados/" + nombreLibro + "_download.pdf");
                             fos.write(result.array());
                             fos.close();
                         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class Cliente {
                             entry.add(nombreLibro);
                             librosServer.put(key, entry);
                             librosDownload.remove(nombreLibro);
-                            try (Writer writer = new FileWriter("/home/anthony/librosServer.json")) {
+                            try (Writer writer = new FileWriter("./librosServer.json")) {
                                 gson.toJson(librosServer, writer);
                             }
                         }catch (Exception e){
@@ -124,7 +124,7 @@ public class Cliente {
             final Type REVIEW_TYPE = new TypeToken<HashMap<String, ArrayList<String>>>() {
             }.getType();
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("/home/anthony/librosServer.json"));
+            JsonReader reader = new JsonReader(new FileReader("./librosServer.json"));
             cliente.librosServer = gson.fromJson(reader, REVIEW_TYPE);
 
 
