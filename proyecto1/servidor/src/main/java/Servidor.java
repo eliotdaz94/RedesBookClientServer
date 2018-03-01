@@ -206,6 +206,7 @@ public class Servidor {
                 .thenApply(nothing ->
                 {
                     try {
+                        System.out.println("Escribio " + nothing);
                         channel.close();
                     } catch (Exception e){}
                     return nothing;
