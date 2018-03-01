@@ -350,6 +350,7 @@ public class Cliente {
                         if (!size.equals("0")) {
                             System.out.println("0");
                             finds.put(addresses[0], true);
+                            System.out.println(finds.get(addresses[0]));
                         }
                     })
                     .thenComposeAsync(nothing -> {
