@@ -2,7 +2,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-
 import java.io.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
@@ -33,12 +32,12 @@ public class Cliente {
         this.port = port;
     }
 
-    public CompletableFuture<String> execute(RemoteCommand command) throws IOException {
+    public CompletableFuture<String> execute(RemoteCommand command, String addr, int port) throws IOException {
         byte[] serialized = RemoteCommand.serialize(command);
         AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
 
         return CompletableIO.<Void, Cliente>execute(handler ->
-                channel.connect(new InetSocketAddress("159.90.9.10", 8989), this, handler))
+                channel.connect(new InetSocketAddress(addr, port), this, handler))
                 .thenComposeAsync(nothing -> CompletableIO.<Integer, Cliente>execute(handler -> channel.write(ByteBuffer.wrap(serialized), 600, TimeUnit.SECONDS, this, handler)), workerPool)
                 .thenComposeAsync(written -> {
                     String bookName = null;
@@ -57,30 +56,40 @@ public class Cliente {
                         System.out.println("Libro conseguido, iniciando descarga.");
                         String nombreLibro = ((Commands.Request) command).name;
                         try {
-                            FileOutputStream fos = new FileOutputStream("./LibrosDescargados/" + nombreLibro + "_download.pdf");
+                            FileOutputStream fos = new FileOutputStream("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/LibrosDescargados/" + nombreLibro + "_download.pdf");
                             fos.write(result.array());
                             fos.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                         try{
+			    System.out.println("Abriendo Gson");
                             Gson gson = new Gson();
                             ArrayList<String> entry;
                             String key = channel.getRemoteAddress().toString();
+			    System.out.println("Antes del if");
+			    if(librosServer == null) {
+				librosServer = new HashMap<>();
+			    }
                             if(librosServer.containsKey(key)) {
+				System.out.println("Existe la entrada");
                                 entry = librosServer.get(key);
                             }
                             else{
+				System.out.println("No existe la entrada");
                                 entry = new ArrayList<>();
                             }
+			    System.out.println("Ya encontre la key");
                             entry.add(nombreLibro);
                             librosServer.put(key, entry);
                             librosDownload.remove(nombreLibro);
-                            try (Writer writer = new FileWriter("./librosServer.json")) {
+                            try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosServer.json")) {
                                 gson.toJson(librosServer, writer);
                             }
                         }catch (Exception e){
+			    System.out.println("Catch del Gson");
                             System.out.println(e);
+			    e.printStackTrace();
                         }
                         return "Descarga finalizada.";
                     }
@@ -124,7 +133,7 @@ public class Cliente {
             final Type REVIEW_TYPE = new TypeToken<HashMap<String, ArrayList<String>>>() {
             }.getType();
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("./librosServer.json"));
+            JsonReader reader = new JsonReader(new FileReader("/home/invitado/Documents/RedesBookClientServer/proyecto1/cliente/src/main/java/librosServer.json"));
             cliente.librosServer = gson.fromJson(reader, REVIEW_TYPE);
 
 
@@ -149,8 +158,12 @@ public class Cliente {
                 }
                 else if(input.equals("2")){
                     Command c = Command.parseCommand("books", null);
-                    cliente.execute((RemoteCommand) c)
+                    cliente.execute((RemoteCommand) c,"159.90.9.10",8989)
                     .thenAcceptAsync(System.out::println);
+		    cliente.execute((RemoteCommand) c,"159.90.9.11",8989)
+		    .thenAcceptAsync(System.out::println);
+		    cliente.execute((RemoteCommand) c,"159.90.9.12",8989)
+		    .thenAcceptAsync(System.out::println);
                 }
                 else if(input.equals("3")){
                     System.out.println("Ingrese el nombre del libro a descargar: ");
@@ -158,11 +171,11 @@ public class Cliente {
                     Command c = Command.parseCommand("request", bookName);
                     Command s = Command.parseCommand("size", bookName);
                     Command f = Command.parseCommand("finish", bookName);
-                    cliente.execute((RemoteCommand) s)
+                    cliente.execute((RemoteCommand) s,"159.90.9.10",8989)
                     .thenAcceptAsync(size -> cliente.librosSize.put(bookName, Integer.parseInt(size)))
                     .thenComposeAsync(nothing -> {
                         try {
-                            return cliente.execute((RemoteCommand) c);
+                            return cliente.execute((RemoteCommand) c,"159.90.9.10",8989);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -171,7 +184,7 @@ public class Cliente {
                     .thenAcceptAsync(System.out::println)
                     .thenComposeAsync(none -> {
                         try {
-                            return cliente.execute((RemoteCommand) f);
+                            return cliente.execute((RemoteCommand) f,"159.90.9.10",8989);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
