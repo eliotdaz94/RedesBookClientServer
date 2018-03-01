@@ -24,6 +24,10 @@ public abstract class RemoteCommand extends Command {
             String mensaje = "Finish " + ((Commands.Finish) command).name;
             return mensaje.getBytes(charset);
         }
+        if(command instanceof  Commands.Restart){
+            String mensaje = "Restart " + ((Commands.Restart) command).name + " " + ((Commands.Restart) command).from;
+            return mensaje.getBytes(charset);
+        }
 
         return null;
     }

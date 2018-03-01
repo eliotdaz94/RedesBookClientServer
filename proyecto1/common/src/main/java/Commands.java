@@ -33,4 +33,14 @@ final public class Commands {
             name = n;
         }
     }
+
+    public static class Restart extends RemoteCommand{
+        String name;
+        String from;
+
+        Restart(String n, String f){
+            name = n;
+            from = f;
+        }
+    }
 }

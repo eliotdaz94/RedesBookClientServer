@@ -120,6 +120,48 @@ public class Servidor {
                     System.out.println(e);
                 }
             }
+            if(com.equals("Restart")){
+                System.out.println("Reanudando descarga");
+                try{
+                    byte[] bytesArray = new byte[(int) elegido.libro.length()];
+                    byte[] bytesArrayAux = new byte[(int) Integer.parseInt(splitResult[2]) + 1];
+
+                    FileInputStream fis;
+                    fis = new FileInputStream(elegido.libro);
+                    fis.read(bytesArray);
+                    fis.close();
+
+                    System.arraycopy(bytesArray, 0, bytesArrayAux, Integer.parseInt(splitResult[2]) + 1, bytesArray.length);
+                    int bookD = 1;
+                    if(downloadedBooks.containsKey(elegido.nombre)){
+                        bookD = downloadedBooks.get(elegido.nombre) + 1;
+                    }
+                    downloadedBooks.put(elegido.nombre, bookD);
+                    Gson gson = new Gson();
+                    String key = clientChannel.getRemoteAddress().toString().split(":")[0];
+                    if(booksClient.containsKey(key)){
+                        int clientB = 1;
+                        if(booksClient.get(key).containsKey(elegido.nombre)){
+                            clientB = booksClient.get(key).get(elegido.nombre) + 1;
+                        }
+                        booksClient.get(key).put(elegido.nombre, clientB);
+                    }
+                    else {
+                        HashMap<String, Integer> aux = new HashMap<>();
+                        aux.put(elegido.nombre, 1);
+                        booksClient.put(key, aux);
+                    }
+                    if(currentDownloads.containsKey(key)){
+                        currentDownloads.get(key).remove(elegido.nombre);
+                    }
+                    try (Writer writer = new FileWriter("/home/invitado/Documents/RedesBookClientServer/proyecto1/servidor/src/main/java/librosDescargados.json")) {
+                        gson.toJson(booksClient, writer);
+                    }
+                    return bytesArrayAux;
+                }catch (Exception e){
+                    System.out.println(e);
+                }
+            }
             System.out.println("Enviando archivo " + elegido.nombre);
             System.out.println("De tam " + (int) elegido.libro.length());
 

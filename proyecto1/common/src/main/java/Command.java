@@ -1,7 +1,7 @@
 
 public abstract class Command {
 
-    public static Command parseCommand(String commandLine, String nombre) {
+    public static Command parseCommand(String commandLine, String nombre, String from) {
         if(commandLine.equals("echo"))
             return new Commands.Echo();
         if(commandLine.equals("books"))
@@ -12,6 +12,8 @@ public abstract class Command {
             return new Commands.Size(nombre);
         if(commandLine.equals("finish"))
             return new Commands.Finish(nombre);
+        if(commandLine.equals("restart"))
+            return new Commands.Restart(nombre, from);
         return null;
     }
 }
