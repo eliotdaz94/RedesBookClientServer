@@ -124,7 +124,7 @@ public class Servidor {
                 System.out.println("Reanudando descarga");
                 try{
                     byte[] bytesArray = new byte[(int) elegido.libro.length()];
-                    byte[] bytesArrayAux = new byte[(int) Integer.parseInt(splitResult[2]) + 1];
+                    byte[] bytesArrayAux = new byte[(int) bytesArray.length - Integer.parseInt(splitResult[2]) + 1];
 
                     FileInputStream fis;
                     fis = new FileInputStream(elegido.libro);

@@ -348,9 +348,7 @@ public class Cliente {
                             e.printStackTrace();
                         }
                         if (!size.equals("0")) {
-                            System.out.println("0");
                             finds.put(addresses[0], true);
-                            System.out.println(finds.get(addresses[0]));
                         }
                     })
                     .thenComposeAsync(nothing -> {
@@ -373,9 +371,6 @@ public class Cliente {
                     })
                     .thenAcceptAsync(none -> {
                         try {
-                            System.out.println("En el primero luego");
-                            System.out.println(finds.get(addresses[0]));
-                            System.out.println(finds.get(addresses[1]));
                             if(finds.get(addresses[0])){
                                 return;
                             }
@@ -388,7 +383,6 @@ public class Cliente {
                                     e.printStackTrace();
                                 }
                                 if (!size.equals("0")) {
-                                    System.out.println("1");
                                     finds.put(addresses[1], true);
                                 }
                             })
@@ -416,9 +410,6 @@ public class Cliente {
                     })
                     .thenAcceptAsync(none -> {
                         try {
-                            System.out.println("En el segundo luego");
-                            System.out.println(finds.get(addresses[0]));
-                            System.out.println(finds.get(addresses[1]));
                             if(finds.get(addresses[1]) || finds.get(addresses[0])){
                                 return;
                             }
@@ -431,7 +422,6 @@ public class Cliente {
                                     e.printStackTrace();
                                 }
                                 if (!size.equals("0")) {
-                                    System.out.println("El index true es " + 2);
                                     finds.put(addresses[2], true);
                                 }
                             })
